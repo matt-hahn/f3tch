@@ -17,7 +17,7 @@ const generateProfile = () => profile('profile')
 	.mode(modes[0])
 
 // Testing module
-import f3tch, {profile} from '../index'
+import f3tch, {profile} from '../src/index'
 
 describe('Main module', () => {
 	describe('profile', () => {
