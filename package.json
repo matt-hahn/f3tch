@@ -1,0 +1,41 @@
+{
+  "name": "f3tch",
+  "version": "0.2.0",
+  "description": "Interface around javascript's fetch Api",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=development jest --silent",
+    "test:coverage": "NODE_ENV=development jest --coverage",
+    "test:watch": "NODE_ENV=development jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattHahnDesign/fetch-it.git"
+  },
+  "keywords": [
+    "fetch",
+    "api",
+    "interface"
+  ],
+  "author": "Matt Hahn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MattHahnDesign/fetch-it/issues"
+  },
+  "homepage": "https://github.com/MattHahnDesign/fetch-it#readme",
+  "private": false,
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.0.0",
+    "jest": "^20.0.4",
+    "jest-fetch-mock": "^1.2.1"
+  },
+  "jest": {
+    "automock": false,
+    "setupFiles": [
+      "./test/setup.js"
+    ]
+  }
+}
