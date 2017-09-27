@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/11332183/30909439-5c0a68c8-a381-11e7-8614-5acd22227570.png" width="200" style="margin-bottom: 40px;" />
+
 # f3tch
 A profilable wrapper around javascript's fetch Api built with async / await.
 
@@ -6,9 +8,33 @@ The main purpose is to create profiles that one can reuse for DRY code.
 ## Table of content
 
 * [Installation](#installation)
-* [Basic usage](#basic-usage)
+* [Examples](#exmaples)
+	* [Basic usage](#basic-usage)
+	* [Full Example](#full-example)
 * [f3tch documentation](#f3tch-documentation)
-	* [f3tch examples](#f3tch-examples)
+	* [f3tch](#f3tch)
+	* [.profile](#f3tch-profile)
+	* [.mode](#f3tch-mode)
+	* [.credentials](#f3tch-credentials)
+	* [.headers](#f3tch-headers)
+	* [.query](#f3tch-query)
+	* [.body](#f3tch-body)
+	* [.get](#f3tch-get)
+	* [.post](#f3tch-post)
+	* [.patch](#f3tch-patch)
+	* [.put](#f3tch-put)
+	* [.delete](#f3tch-delete)
+	* [.head](#f3tch-head)
+	* [.options](#f3tch-options)
+* [profile documentation](#profile-documentation)
+	* [.url](#profile-url)
+	* [.responder](#profile-responder)
+	* [.mode](#profile-mode)
+	* [.credentials](#profile-credentials)
+	* [.headers](#profile-headers)
+	* [.query](#profile-query)
+	* [.body](#profile-body)
+* [LICENSE](#license)
 
 ## Installation
 
@@ -18,7 +44,9 @@ or if using yarn
 
 `yarn add f3tch`
 
-## Basic usage
+## Examples
+
+### Basic usage
 
 ```javascript
 import f3tch from `f3tch`
@@ -27,19 +55,76 @@ async function makeRequest() {
 	try {
 		const reponse = await f3tch('https://your.url.com').get()
 		const json = await response.json()
+		// Do something
 	} catch(error) {
 		// Do something
 	}
 }
 ```
 
+### Full example
+
+```javascript
+import f3tch, {profile} from `f3tch`
+
+profile('myProfile')
+	.url('http://your.endpoint.com')
+	.headers(() => {
+		// Get the latest token from session / local storage
+		// Or from anywhere else
+		return {
+			Authorization: 'JWT someToken'
+		}
+	})
+	.responder(async (response) => {
+		const json = await response.json()
+		return json
+	})
+
+async function makeApiCall() {
+	try {
+		const reseponse = await f3tch('/api/endoint')
+			.profile('myProfile')
+			.headers({
+				Accept: 'application/json'
+			})
+			.query({
+				foo: 'foo',
+				bar: true,
+			})
+			.query('q=1')
+			.query({
+				arr: [1, 2, 3],
+				indexArray: {
+					value: ['a', 'v'],
+					format: 'index',
+					seperator: '!=',
+				},
+				brackets: {
+					value: ['x', 'z'],
+					format: 'brackets',
+				},
+				obj: {
+					value: 'wawa',
+					seperator: '!='
+				}
+			})
+			.get()
+
+		// Do something with the response
+	} catch(error) {
+		// Do something with the error
+	}
+}
+```
+
 ## f3tch documentation
 
-### f3tch examples
+### f3tch
 
-@todo
-
-### f3tch(`String | Function`)
+```javascript
+f3tch(String | Function)
+```
 
 Parameters:
 * url [String | Function] :: Request's endpoint. Can be a string or a function that returns a string.
@@ -57,7 +142,11 @@ f3tch('https://your.url.com')
 f3tch(() => 'https://your.url.com')
 ```
 
-### .profile(`String`)
+### f3tch .profile
+
+```javascript
+.profile(String)
+```
 
 Parameters:
 * profileName [String] :: Profile name for getting prefixed values from the profile
@@ -71,7 +160,11 @@ Example:
 f3tch(url).profile('myProfile')
 ```
 
-### .mode(`String`)
+### f3tch .mode
+
+```javascript
+.mode(String)
+```
 
 Parameters:
 * mode [String] :: fetch's mode option. Can be one of: `same-origin, cors, cors-with-forced-preflight, no-cors`.
@@ -85,7 +178,11 @@ Example:
 f3tch(url).mode('same-origin')
 ```
 
-### .credentials(`String`)
+### f3tch .credentials
+
+```javascript
+.credentials(String)
+```
 
 Parameters:
 * credentials [String] :: fetch's credentials option. Can be one of: `omit, same-origin, include`.
@@ -99,7 +196,11 @@ Example:
 f3tch(url).credentials('omit')
 ```
 
-### .headers(`Object | Function`)
+### f3tch .headers
+
+```javascript
+.headers(Object | Function)
+```
 
 Parameters:
 * headers [Object | Function] :: Request headers. Can be an object or a function that returns an object.
@@ -109,7 +210,7 @@ Returns:
 
 Examples:
 
-The `.headers()` function is stackable so you can call it multiple times. That way you can build out the headers.
+The `.headers()` function is stackable so it can be called multiple times.
 
 ```javascript
 f3tch(url).headers({
@@ -137,7 +238,11 @@ f3tch(url)
 	})
 ```
 
-### .query(`String | Object | Function`)
+### f3tch .query
+
+```javascript
+.query(String | Object | Function)
+```
 
 Parameters:
 * query [String | Object | Function] :: Request query. Can be a string (`key=value`), an object (`{key: 'value'}`) or a function that returns either a string or an object.
@@ -147,7 +252,7 @@ Returns:
 
 Examples:
 
-The `.query()` function is stackable so you can call it multiple times. That way you can build out the query.
+The `.query()` function is stackable so you can call it multiple times.
 
 There are multiple ways and options to create a query. The simplest way is to pass in a string that would go directly into to the url:
 
@@ -220,7 +325,11 @@ f3tch(url)
 	})
 ```
 
-### .body(`Any | Function`)
+### f3tch .body
+
+```javascript
+.body(Any | Function)
+```
 
 Parameters:
 * body [Any | Function] :: Request body. Can be any value. It is the developers responsibility to pass in the values needed. It can also be a function that returns the needed value.
@@ -238,7 +347,11 @@ const body = JSON.stringify({
 f3tch(url).body(body)
 ```
 
-### .get()
+### f3tch .get
+
+```javascript
+.get()
+```
 
 Description:
 
@@ -273,7 +386,11 @@ f3tch(url)
 	})
 ```
 
-### .post()
+### f3tch .post
+
+```javascript
+.post()
+```
 
 Description:
 
@@ -308,7 +425,11 @@ f3tch(url)
 	})
 ```
 
-### .patch()
+### f3tch .patch
+
+```javascript
+.patch()
+```
 
 Description:
 
@@ -343,7 +464,11 @@ f3tch(url)
 	})
 ```
 
-### .put()
+### f3tch .put
+
+```javascript
+.put()
+```
 
 Description:
 
@@ -378,7 +503,11 @@ f3tch(url)
 	})
 ```
 
-### .delete()
+### f3tch .delete
+
+```javascript
+.delete()
+```
 
 Description:
 
@@ -413,7 +542,11 @@ f3tch(url)
 	})
 ```
 
-### .head()
+### f3tch .head
+
+```javascript
+.head()
+```
 
 Description:
 
@@ -448,7 +581,11 @@ f3tch(url)
 	})
 ```
 
-### .options()
+### f3tch .options
+
+```javascript
+.options()
+```
 
 Description:
 
@@ -485,11 +622,11 @@ f3tch(url)
 
 ## profile documentation
 
-### profile examples
+### profile
 
-@todo
-
-### profile(`String`)
+```javascript
+profile(String)
+```
 
 Parameters:
 * profile [String] :: Profile name
@@ -503,7 +640,11 @@ Examples:
 profile('my-profile')
 ```
 
-### .url(`String | Function`)
+### profile .url
+
+```javascript
+.url(String | Function)
+```
 
 Parameters:
 * url [String | Function] :: Request's base endpoint. Can be a string or a function that returns a string.
@@ -521,26 +662,106 @@ profile(name).url('https://your.url.com')
 profile(name).url(() => 'https://your.url.com')
 ```
 
-### .responder(`Function`)
+### profile .responder
 
-@todo
+```javascript
+.responder(Function)
+```
 
-### .mode(`String`)
+Parameters:
+* responderFunction [Function] :: Function that handles the response.
 
-@todo
+Returns:
+* Profile instance
 
-### .credentials(`String`)
+Examples:
 
-@todo
+```javascript
+// async / await
 
-### .headers(`Object | Function`)
+async function convertToJson(response) {
+	const json = await response.json()
+	return json
+}
 
-@todo
+profile(name).responder(convertToJson)
+```
 
-### .query(`String | Object | Function`)
+```javascript
+// Promise
 
-@todo
+function convertToJson(response) {
+	return response
+		.json()
+		.then(json => json)
+		.catch(error => error)
+}
 
-### .body(`Any | Function`)
+profile(name).responder(convertToJson)
+```
 
-@todo
+### profile .mode
+
+```javascript
+.mode(String)
+```
+
+Check out [.mode](#f3tch-mode). It is the same API only for a profile.
+
+### profile .credentials
+
+```javascript
+.credentials(String)
+```
+
+Check out [.credentials](#f3tch-credentials). It is the same API only for a profile.
+
+### profile .headers
+
+```javascript
+.headers(Object | Function)
+```
+
+Check out [.headers](#f3tch-headers). It is the same API only for a profile.
+
+### profile .query
+
+```javascript
+.query(String | Object | Function)
+```
+
+Check out [.query](#f3tch-query). It is the same API only for a profile.
+
+### profile .body
+
+```javascript
+.body(Any | Function)
+```
+
+Check out [.body](#f3tch-body). It is the same API only for a profile.
+
+
+
+## LICENSE
+
+MIT License
+
+Copyright (c) 2017 Matt Hahn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

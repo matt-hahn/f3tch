@@ -1,6 +1,6 @@
 {
   "name": "f3tch",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "description": "Interface around javascript's fetch Api",
   "main": "./build/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test:coverage": "NODE_ENV=development jest --coverage",
     "test:watch": "NODE_ENV=development jest --watch",
     "build": "babel src -d build",
-    "prepublish": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
