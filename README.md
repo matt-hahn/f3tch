@@ -11,6 +11,7 @@ The main purpose is to create profiles that one can reuse for DRY code.
 * [Examples](#exmaples)
 	* [Basic usage](#basic-usage)
 	* [Full Example](#full-example)
+	* [Real World Example](#real-world-example)
 * [f3tch documentation](#f3tch-documentation)
 	* [f3tch](#f3tch)
 	* [.profile](#f3tch-profile)
@@ -52,13 +53,13 @@ or if using yarn
 import f3tch from `f3tch`
 
 async function makeRequest() {
-	try {
-		const reponse = await f3tch('https://your.url.com').get()
-		const json = await response.json()
-		// Do something
-	} catch(error) {
-		// Do something
-	}
+  try {
+    const reponse = await f3tch('https://your.url.com').get()
+    const json = await response.json()
+    // Do something
+  } catch(error) {
+    // Do something
+  }
 }
 ```
 
@@ -68,53 +69,169 @@ async function makeRequest() {
 import f3tch, {profile} from `f3tch`
 
 profile('myProfile')
-	.url('http://your.endpoint.com')
-	.headers(() => {
-		// Get the latest token from session / local storage
-		// Or from anywhere else
-		return {
-			Authorization: 'JWT someToken'
-		}
-	})
-	.responder(async (response) => {
-		const json = await response.json()
-		return json
-	})
+  .url('http://your.endpoint.com')
+  .headers(() => {
+    // Get the latest token from session / local storage
+    // Or from anywhere else
+    return {
+      Authorization: 'JWT someToken'
+    }
+  })
+  .responder(async (response) => {
+    const json = await response.json()
+    return json
+  })
 
 async function makeApiCall() {
-	try {
-		const reseponse = await f3tch('/api/endoint')
-			.profile('myProfile')
-			.headers({
-				Accept: 'application/json'
-			})
-			.query({
-				foo: 'foo',
-				bar: true,
-			})
-			.query('q=1')
-			.query({
-				arr: [1, 2, 3],
-				indexArray: {
-					value: ['a', 'v'],
-					format: 'index',
-					seperator: '!=',
-				},
-				brackets: {
-					value: ['x', 'z'],
-					format: 'brackets',
-				},
-				obj: {
-					value: 'wawa',
-					seperator: '!='
-				}
-			})
-			.get()
+  try {
+    const reseponse = await f3tch('/api/endoint')
+      .profile('myProfile')
+      .headers({
+        Accept: 'application/json'
+      })
+      .query({
+        foo: 'foo',
+        bar: true,
+      })
+      .query('q=1')
+      .query({
+        arr: [1, 2, 3],
+        indexArray: {
+          value: ['a', 'v'],
+          format: 'index',
+          seperator: '!=',
+        },
+        brackets: {
+          value: ['x', 'z'],
+          format: 'brackets',
+        },
+        obj: {
+          value: 'wawa',
+          seperator: '!='
+        }
+      })
+      .get()
 
-		// Do something with the response
-	} catch(error) {
-		// Do something with the error
-	}
+    // Do something with the response
+  } catch(error) {
+    // Do something with the error
+  }
+}
+```
+
+### Real world example
+
+```js
+// fetchProfiles.js
+
+// Create a profile
+
+import {profile} from 'f3tch'
+
+profile('myProfile')
+  .url('http://api.endpoint.com')
+  .headers(() => ({
+    Authorization: `JWT ${localStorage.get('token')}`,
+    Accept: 'application/json',
+  }))
+  .responder(async (response) => await response.json())
+```
+
+```js
+// src/index.js
+
+// Import created profiles into the top level of your application
+
+import './path/to/fetchProfiles.js'
+```
+
+```js
+// users.api.js
+
+// Create endpoints for dealing with the user API
+
+import f3tch from 'f3tch'
+
+export const getUsers = (query = {}) => f3tch('/users/')
+  .profile('myProfile')
+  .query(query)
+  .get()
+
+export const getUserById = (id) => f3tch(`/users/${id}/`)
+  .profile('myProfile')
+  .get()
+
+export const createUser = (user = {}) => f3tch('/users/')
+  .profile('myProfile')
+  .body(JSON.parse(user))
+  .post()
+
+export const updateUser = (user = {}) => f3tch('/users/')
+  .profile('myProfile')
+  .body(JSON.parse(user))
+  .put()
+
+export const deleteUser = (id) => f3tch(`/users/${id}/`)
+  .profile('myProfile')
+  .delete()
+```
+
+```js
+// App.js
+
+// Using created enpoint functions somwhere in the application
+
+import {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from './path/to/users.api.js'
+
+const getUsersApi = async () => {
+  try {
+    const users = await getUsers()
+    // Do something
+  } catch (error) {
+    // Do something with the error
+  }
+}
+
+const getUserByIdApi = async (id) => {
+  try {
+    const user = await getUserById(id)
+    // Do something
+  } catch (error) {
+    // Do something with the error
+  }
+}
+
+const createUserApi = async (user) => {
+  try {
+    const user = await createUser(user)
+    // Do something
+  } catch (error) {
+    // Do something with the error
+  }
+}
+
+const updateUserApi = async (user) => {
+  try {
+    const user = await updateUser(user)
+    // Do something
+  } catch (error) {
+    // Do something with the error
+  }
+}
+
+const deleteUserApi = async (id) => {
+  try {
+    await deleteUser(id)
+    // Do something
+  } catch (error) {
+    // Do something with the error
+  }
 }
 ```
 
@@ -214,15 +331,15 @@ The `.headers()` function is stackable so it can be called multiple times.
 
 ```javascript
 f3tch(url).headers({
-	Accept: 'application/json',
-	Authorization: 'JWT token'
+  Accept: 'application/json',
+  Authorization: 'JWT token'
 })
 ```
 
 ```javascript
 const getHeaders = () => ({
-	Accept: 'application/json',
-	Authorization: 'JWT token'
+  Accept: 'application/json',
+  Authorization: 'JWT token'
 })
 
 f3tch(url).headers(getHeaders)
@@ -230,12 +347,12 @@ f3tch(url).headers(getHeaders)
 
 ```javascript
 f3tch(url)
-	.headers({
-		Accept: 'application/json'
-	})
-	.headers({
-		Authorization: 'JWT token'
-	})
+  .headers({
+    Accept: 'application/json'
+  })
+  .headers({
+    Authorization: 'JWT token'
+  })
 ```
 
 ### f3tch .query
@@ -266,10 +383,10 @@ If working with the query object there are some options to build out the query. 
 
 ```javascript
 {
-	foo: {
-		value: 'bar',
-		seperator: '!='
-	}
+  foo: {
+    value: 'bar',
+    seperator: '!='
+  }
 }
 
 // This would convert to
@@ -280,18 +397,18 @@ Similar options apply for working with `array` values but there is one more opti
 
 ```javascript
 {
-	foo: {
-		value: ['a', 'b'],
-		seperator: '!='
-	},
-	bar: {
-		value: ['a', 'b'],
-		format: 'index'
-	},
-	baz: {
-		value: ['a', 'b'],
-		format: 'brackets'
-	}
+  foo: {
+    value: ['a', 'b'],
+    seperator: '!='
+  },
+  bar: {
+    value: ['a', 'b'],
+    format: 'index'
+  },
+  baz: {
+    value: ['a', 'b'],
+    format: 'brackets'
+  }
 }
 
 // This would convert to
@@ -302,27 +419,27 @@ And here is an example using all possibilities:
 
 ```javascript
 f3tch(url)
-	.query({
-		foo: 'foo',
-		bar: true,
-	})
-	.query('q=1')
-	.query({
-		arr: [1, 2, 3],
-		indexArray: {
-			value: ['a', 'v'],
-			format: 'index',
-			seperator: '!=',
-		},
-		brackets: {
-			value: ['x', 'z'],
-			format: 'brackets',
-		},
-		obj: {
-			value: 'wawa',
-			seperator: '!='
-		}
-	})
+  .query({
+    foo: 'foo',
+    bar: true,
+  })
+  .query('q=1')
+  .query({
+    arr: [1, 2, 3],
+    indexArray: {
+      value: ['a', 'v'],
+      format: 'index',
+      seperator: '!=',
+    },
+    brackets: {
+      value: ['x', 'z'],
+      format: 'brackets',
+    },
+    obj: {
+      value: 'wawa',
+      seperator: '!='
+    }
+  })
 ```
 
 ### f3tch .body
@@ -365,25 +482,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).get()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).get()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.get()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .get()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .post
@@ -404,25 +521,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).post()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).post()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.post()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .post()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .patch
@@ -443,25 +560,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).patch()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).patch()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.patch()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .patch()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .put
@@ -482,25 +599,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).put()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).put()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.put()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .put()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .delete
@@ -521,25 +638,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).delete()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).delete()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.delete()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .delete()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .head
@@ -560,25 +677,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).head()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).head()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.head()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .head()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ### f3tch .options
@@ -599,25 +716,25 @@ Example:
 ```javascript
 // async / await
 async function makeRequest() {
-	try {
-		const response = await f3tch(url).options()
-		return response
-	} catch(error) {
-		throw error;
-	}
+  try {
+    const response = await f3tch(url).options()
+    return response
+  } catch(error) {
+    throw error;
+  }
 }
 ```
 
 ```javascript
 // Promise
 f3tch(url)
-	.options()
-	.then(response => {
-		// Do something with the response
-	})
-	.catch(error => {
-		// Do something with the error
-	})
+  .options()
+  .then(response => {
+    // Do something with the response
+  })
+  .catch(error => {
+    // Do something with the error
+  })
 ```
 
 ## profile documentation
@@ -680,8 +797,8 @@ Examples:
 // async / await
 
 async function convertToJson(response) {
-	const json = await response.json()
-	return json
+  const json = await response.json()
+  return json
 }
 
 profile(name).responder(convertToJson)
@@ -691,10 +808,10 @@ profile(name).responder(convertToJson)
 // Promise
 
 function convertToJson(response) {
-	return response
-		.json()
-		.then(json => json)
-		.catch(error => error)
+  return response
+    .json()
+    .then(json => json)
+    .catch(error => error)
 }
 
 profile(name).responder(convertToJson)

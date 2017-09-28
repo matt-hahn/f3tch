@@ -1,6 +1,6 @@
 {
   "name": "f3tch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interface around javascript's fetch Api",
   "main": "./build/index.js",
   "scripts": {
