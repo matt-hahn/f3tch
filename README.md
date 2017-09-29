@@ -1,7 +1,7 @@
 <img src="https://user-images.githubusercontent.com/11332183/30909439-5c0a68c8-a381-11e7-8614-5acd22227570.png" width="200" style="margin-bottom: 40px;" />
 
 # f3tch
-A profilable wrapper around javascript's fetch Api built with async / await.
+A wrapper around javascript's fetch Api with customizable profiles, built with async / await.
 
 The main purpose is to create profiles that one can reuse for DRY code.
 
@@ -13,28 +13,34 @@ The main purpose is to create profiles that one can reuse for DRY code.
 	* [Full Example](#full-example)
 	* [Real World Example](#real-world-example)
 * [f3tch documentation](#f3tch-documentation)
-	* [f3tch](#f3tch)
-	* [.profile](#f3tch-profile)
-	* [.mode](#f3tch-mode)
-	* [.credentials](#f3tch-credentials)
-	* [.headers](#f3tch-headers)
-	* [.query](#f3tch-query)
-	* [.body](#f3tch-body)
-	* [.get](#f3tch-get)
-	* [.post](#f3tch-post)
-	* [.patch](#f3tch-patch)
-	* [.put](#f3tch-put)
-	* [.delete](#f3tch-delete)
-	* [.head](#f3tch-head)
-	* [.options](#f3tch-options)
+  * Constructor:
+	  * [f3tch](#f3tch)
+  * Methods:
+	  * [.profile](#f3tch-profile)
+    * [.mode](#f3tch-mode)
+    * [.credentials](#f3tch-credentials)
+    * [.headers](#f3tch-headers)
+    * [.query](#f3tch-query)
+    * [.body](#f3tch-body)
+  * Request methods:
+    * [.get](#f3tch-get)
+    * [.post](#f3tch-post)
+    * [.patch](#f3tch-patch)
+    * [.put](#f3tch-put)
+    * [.delete](#f3tch-delete)
+    * [.head](#f3tch-head)
+    * [.options](#f3tch-options)
 * [profile documentation](#profile-documentation)
-	* [.url](#profile-url)
-	* [.responder](#profile-responder)
-	* [.mode](#profile-mode)
-	* [.credentials](#profile-credentials)
-	* [.headers](#profile-headers)
-	* [.query](#profile-query)
-	* [.body](#profile-body)
+  * Constructor:
+    * [profile](#profile)
+  * Methods:
+    * [.url](#profile-url)
+    * [.responder](#profile-responder)
+    * [.mode](#profile-mode)
+    * [.credentials](#profile-credentials)
+    * [.headers](#profile-headers)
+    * [.query](#profile-query)
+    * [.body](#profile-body)
 * [LICENSE](#license)
 
 ## Installation
