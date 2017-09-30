@@ -1,6 +1,6 @@
 {
   "name": "f3tch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Interface around javascript's fetch Api",
   "main": "./build/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MattHahnDesign/f3tch.git"
+    "url": "git+https://github.com/matt-hahn/f3tch.git"
   },
   "keywords": [
     "fetch",
@@ -22,12 +22,12 @@
     "profile",
     "profilable"
   ],
-  "author": "Matt Hahn",
+  "author": "Matt Hahn <hahn.matej@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MattHahnDesign/f3tch/issues"
+    "url": "https://github.com/matt-hahn/f3tch/issues"
   },
-  "homepage": "https://github.com/MattHahnDesign/f3tch#readme",
+  "homepage": "https://github.com/matt-hahn/f3tch#readme",
   "private": false,
   "devDependencies": {
     "babel-cli": "^6.26.0",
