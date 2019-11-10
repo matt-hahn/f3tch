@@ -1,13 +1,14 @@
 // Attributes
-import {prepareUrl} from '../attributes/url'
-import {prepareQuery} from '../attributes/query'
-import {prepareHeaders} from '../attributes/headers'
-import {prepareCredentials} from '../attributes/credentials'
-import {prepareMode} from '../attributes/mode'
-import {prepareBody} from '../attributes/body'
+import {prepareUrl} from '../attributes/url';
+import {prepareQuery} from '../attributes/query';
+import {prepareHeaders} from '../attributes/headers';
+import {prepareCredentials} from '../attributes/credentials';
+import {prepareMode} from '../attributes/mode';
+import {prepareBody} from '../attributes/body';
+import {prepareBodyParser} from '../attributes/bodyParser';
 
-// Classes
-import Profile from '../classes/Profile'
+// Profile
+import Profile from '../classes/Profile';
 
 /**
  * @description :: Preparing the fetch attributes for execution
@@ -22,34 +23,48 @@ import Profile from '../classes/Profile'
  * @return {Object} :: Fetch attributes
  */
 export default ({
-	url,
-	method,
-	profile,
-	headers,
-	query,
-	body,
-	credentials,
-	mode,
+  url,
+  method,
+  profile = new Profile(),
+  headers,
+  query,
+  body,
+  bodyParser,
+  credentials,
+  mode,
 }) => {
-	const selectedProfile = Profile.getProfile(profile)
+  const options = {
+    method,
+    headers: prepareHeaders(...profile.data.headers, ...headers),
+  };
 
-	const options = {
-		method,
-		headers: prepareHeaders(...selectedProfile.headers, ...headers)
-	}
+  const preparedCredentials = prepareCredentials(
+    profile.data.credentials,
+    credentials
+  );
+  if (preparedCredentials) options.credentials = preparedCredentials;
 
-	const preparedCredentials = prepareCredentials(selectedProfile.credentials, credentials)
-	if (preparedCredentials) options.credentials = preparedCredentials
+  const preparedMode = prepareMode(profile.data.mode, mode);
+  if (preparedMode) options.mode = preparedMode;
 
-	const preparedMode = prepareMode(selectedProfile.mode, mode)
-	if (preparedMode) options.mode = preparedMode
+  const preparedBody = prepareBody(profile.data.body, body);
+  if (preparedBody) {
+    const preparedBodyParser = prepareBodyParser(
+      profile.data.bodyParser,
+      bodyParser
+    );
+    options.body = !!prepareBodyParser
+      ? preparedBodyParser(preparedBody)
+      : preparedBody;
+  }
 
-	const preparedBody = prepareBody(selectedProfile.body, body)
-	if (preparedBody) options.body = preparedBody
-
-	return {
-		url: prepareUrl(selectedProfile.url, url, prepareQuery(...selectedProfile.query, ...query)),
-		options,
-		responder: selectedProfile.responder
-	}
-}
+  return {
+    url: prepareUrl(
+      profile.data.url,
+      url,
+      prepareQuery(...profile.data.query, ...query)
+    ),
+    options,
+    responder: profile.data.responder,
+  };
+};

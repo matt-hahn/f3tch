@@ -1,3 +1,3 @@
-import Profile from './classes/Profile'
+import Profile from './classes/Profile';
 
-export default profile => new Profile(profile)
+export default (profile) => new Profile(profile);

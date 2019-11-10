@@ -1,3 +1,3 @@
 import Fetch from './classes/Fetch';
 
-export default url => new Fetch(url)
+export default (url) => new Fetch(url);

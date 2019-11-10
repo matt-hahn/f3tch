@@ -1,3 +1,3 @@
-import isArray from './isArray'
+import isArray from './isArray';
 
-export default value => typeof value === 'object' && !isArray(value)
+export default (value) => typeof value === 'object' && !isArray(value);
