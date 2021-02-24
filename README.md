@@ -102,7 +102,7 @@ async function makeApiCall() {
         indexArray: {
           value: ['a', 'v'],
           format: 'index',
-          seperator: '!=',
+          separator: '!=',
         },
         brackets: {
           value: ['x', 'z'],
@@ -110,7 +110,7 @@ async function makeApiCall() {
         },
         obj: {
           value: 'wawa',
-          seperator: '!='
+          separator: '!='
         }
       })
       .get()
@@ -147,32 +147,19 @@ import profile from './path/to/myProfile.js';
 import f3tch from 'f3tch';
 
 export const getUsers = (query = {}) =>
-  f3tch('/users/')
-    .profile(profile)
-    .query(query)
-    .get();
+  f3tch('/users/').profile(profile).query(query).get();
 
 export const getUserById = (id) =>
-  f3tch(`/users/${id}/`)
-    .profile(profile)
-    .get();
+  f3tch(`/users/${id}/`).profile(profile).get();
 
 export const createUser = (user = {}) =>
-  f3tch('/users/')
-    .profile(profile)
-    .body(data)
-    .post();
+  f3tch('/users/').profile(profile).body(data).post();
 
 export const updateUser = (user = {}) =>
-  f3tch('/users/')
-    .profile(profile)
-    .body(data)
-    .put();
+  f3tch('/users/').profile(profile).body(data).put();
 
 export const deleteUser = (id) =>
-  f3tch(`/users/${id}/`)
-    .profile(profile)
-    .delete();
+  f3tch(`/users/${id}/`).profile(profile).delete();
 ```
 
 ```js
@@ -392,13 +379,13 @@ f3tch(url).query('key=value');
 
 The second option is to pass in a simple object with key value pairs like `{key: 'value'}` that would be converted into `key=value`. If the value is a `boolean` (`{key: true}`) it will be converted into a string like `key=true` and if it's an `array` (`{key: ['a', 1, true]}`) it will be converted into `key=a&key=1&key=true`.
 
-If working with the query object there are some options to build out the query. The default seperator between the key and value is `=` but it can be changed like this:
+If working with the query object there are some options to build out the query. The default separator between the key and value is `=` but it can be changed like this:
 
 ```javascript
 {
   foo: {
     value: 'bar',
-    seperator: '!='
+    separator: '!='
   }
 }
 
@@ -412,7 +399,7 @@ Similar options apply for working with `array` values but there is one more opti
 {
   foo: {
     value: ['a', 'b'],
-    seperator: '!='
+    separator: '!='
   },
   bar: {
     value: ['a', 'b'],
@@ -442,7 +429,7 @@ f3tch(url)
     indexArray: {
       value: ['a', 'v'],
       format: 'index',
-      seperator: '!=',
+      separator: '!=',
     },
     brackets: {
       value: ['x', 'z'],
@@ -450,7 +437,7 @@ f3tch(url)
     },
     obj: {
       value: 'wawa',
-      seperator: '!=',
+      separator: '!=',
     },
   });
 ```
@@ -503,6 +490,32 @@ const body = {
 f3tch(url)
   .body(body)
   .bodyParser((data) => JSON.stringify(data));
+```
+
+### f3tch .preRequest
+
+```javascript
+.preRequest(Function)
+```
+
+Parameters:
+
+- preRequest [Function] :: Function that gets called right before the API call is being made
+
+Returns:
+
+- F3tch instance
+
+Example:
+
+```javascript
+const somethingDoesNotAddUp = true;
+
+f3tch(url)
+  .body(body)
+  .preRequest(() => {
+    if (somethingDoesNotAddUp) throw new Error('Did not add up');
+  });
 ```
 
 ### f3tch .get
@@ -914,10 +927,18 @@ Check out [.body](#f3tch-body). It is the same API only for a profile.
 ### profile .bodyParser
 
 ```javascript
-.body(Function)
+.bodyParser(Function)
 ```
 
 Check out [.bodyParser](#f3tch-bodyParser). It is the same API only for a profile.
+
+### profile .preRequest
+
+```javascript
+.preRequest(Function)
+```
+
+Check out [.preRequest](#f3tch-preRequest). It is the same API only for a profile.
 
 ## LICENSE
 

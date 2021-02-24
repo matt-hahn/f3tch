@@ -30,14 +30,14 @@ export const arrayBrackets = (format, index) => {
  * @description :: Parsing the array query
  * @param {String} key :: The query key
  * @param {any} value :: The query value
- * @param {String} seperator :: key value seperator
+ * @param {String} separator :: key value separator
  * @param {String} format :: The format for the array query key
  * @return {String} :: Formatted array query
  */
-export const parseArray = ({key, value, seperator = '=', format = 'none'}) =>
+export const parseArray = ({key, value, separator = '=', format = 'none'}) =>
   value
     .map(
-      (val, index) => `${key}${arrayBrackets(format, index)}${seperator}${val}`
+      (val, index) => `${key}${arrayBrackets(format, index)}${separator}${val}`
     )
     .join('&');
 
@@ -51,14 +51,14 @@ export const prepareQueryString = (key, value) => {
   if (isArray(value)) return parseArray({key, value});
 
   if (isObject(value) && isDefined(value.value)) {
-    const seperator = value.seperator ? value.seperator : '=';
+    const separator = value.separator ? value.separator : '=';
 
     if (isArray(value.value)) {
       value.key = key;
       return parseArray(value);
     }
 
-    return `${key}${seperator}${value.value}`;
+    return `${key}${separator}${value.value}`;
   }
 
   return `${key}=${value}`;

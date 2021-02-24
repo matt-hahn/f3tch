@@ -18,6 +18,7 @@ class Fetch {
     query: [],
     body: null,
     bodyParser: null,
+    preRequest: null,
     credentials: null,
     mode: null,
   };
@@ -65,13 +66,24 @@ class Fetch {
   }
 
   /**
-   * @description :: Setting the bodyParserr attribute
-   * @param {Function} bodyParserr :: body parser function
+   * @description :: Setting the bodyParser attribute
+   * @param {Function} bodyParser :: body parser function
    * @return {Object} :: self
    * @memberof Fetch
    */
-  bodyParserr(bodyParserr) {
-    this.data.bodyParserr = bodyParserr;
+  bodyParser(bodyParser) {
+    this.data.bodyParser = bodyParser;
+    return this;
+  }
+
+  /**
+   * @description :: Setting the preRequest attribute
+   * @param {Function} preRequest :: body parser function
+   * @return {Object} :: self
+   * @memberof Fetch
+   */
+  preRequest(preRequest) {
+    this.data.preRequest = preRequest;
     return this;
   }
 

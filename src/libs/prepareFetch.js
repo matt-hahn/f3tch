@@ -6,6 +6,7 @@ import {prepareCredentials} from '../attributes/credentials';
 import {prepareMode} from '../attributes/mode';
 import {prepareBody} from '../attributes/body';
 import {prepareBodyParser} from '../attributes/bodyParser';
+import {preparePreRequest} from '../attributes/preRequest';
 
 // Profile
 import Profile from '../classes/Profile';
@@ -30,6 +31,7 @@ export default ({
   query,
   body,
   bodyParser,
+  preRequest,
   credentials,
   mode,
 }) => {
@@ -58,6 +60,11 @@ export default ({
       : preparedBody;
   }
 
+  const preparedPreRequest = preparePreRequest(
+    profile.data.preRequest,
+    preRequest
+  );
+
   return {
     url: prepareUrl(
       profile.data.url,
@@ -65,6 +72,7 @@ export default ({
       prepareQuery(...profile.data.query, ...query)
     ),
     options,
+    preRequest: preparedPreRequest,
     responder: profile.data.responder,
   };
 };

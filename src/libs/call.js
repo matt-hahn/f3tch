@@ -3,7 +3,9 @@ import isDefined from '../validators/isDefined';
 import isFunction from '../validators/isFunction';
 
 const call = async (data) => {
-  const {url, options, responder} = prepareFetch(data);
+  const {url, options, responder, preRequest} = prepareFetch(data);
+
+  if (!!preRequest) await preRequest();
 
   const response = await fetch(url, options);
 

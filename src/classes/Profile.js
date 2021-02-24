@@ -15,6 +15,7 @@ class Profile {
     query: [],
     body: null,
     bodyParser: (data) => data,
+    preRequest: null,
     credentials: null,
     mode: null,
     responder: null,
@@ -76,6 +77,17 @@ class Profile {
    */
   bodyParser(bodyParser) {
     this.data.bodyParser = bodyParser;
+    return this;
+  }
+
+  /**
+   * @description :: Setting the preRequest attribute
+   * @param {Function} preRequest :: Function that automatically parses the preRequest
+   * @return {Object} :: self
+   * @memberof Profile
+   */
+  preRequest(preRequest) {
+    this.data.preRequest = preRequest;
     return this;
   }
 
